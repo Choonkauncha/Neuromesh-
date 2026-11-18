@@ -4,7 +4,10 @@ from unittest import mock
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import harness, packet as pk, score_auto
+import run_baselines
+from budget_ledger import BudgetLedger, LedgerError
 from providers import MockProvider, OpenAICompatible, ProviderError
+from run_baselines import RecordingProvider
 from toolbox import ToolBox
 
 ROOT = harness.ROOT
@@ -322,6 +325,79 @@ class BudgetAndFailureTests(unittest.TestCase):
         self.assertEqual(log["status"], "provider_failed")
         self.assertTrue(path.exists())
         self.assertEqual(log["failure"]["attempts"][0]["error"], "HTTP 503")
+
+
+class LedgerAndRunnerTests(unittest.TestCase):
+    def test_ledger_round_trip_and_totals(self):
+        led = BudgetLedger("run-1", RES, "single_agent_tool_loop", "gemini-2.5-flash", 200_000, 100, 900)
+        led.reserve(4000, 1, "dispatch")
+        led.record_actual(1500, 1, "provider_call")
+        led.release(2500, 0, "unused_reservation")
+        self.assertEqual(led.used_tokens, 1500)
+        self.assertEqual(led.reserved_tokens, 1500)
+        self.assertEqual(led.remaining_tokens, 198_500)
+        self.assertFalse(led.usage_estimated)
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d) / "ledger.json"
+            led.write(p)
+            back = BudgetLedger.read(p)
+        self.assertEqual(back.run_id, "run-1")
+        self.assertEqual(back.used_tokens, 1500)
+        self.assertEqual([e["kind"] for e in back.entries], ["reserve", "actual", "release"])
+
+    def test_ledger_rejects_bad_schema(self):
+        led = BudgetLedger("r", "t", "c", "m", 100, None, 60)
+        with self.assertRaises(LedgerError):
+            led.reserve(-1)
+        with self.assertRaises(LedgerError):
+            led._event("bogus", 1, 1, "x")
+        bad = led.to_dict()
+        bad["schema_version"] = 99
+        with self.assertRaises(LedgerError):
+            BudgetLedger.validate(bad)
+
+    def test_from_harness_log_marks_estimated_remainder(self):
+        log = {"task_id": RES, "condition": "single_agent_tool_loop", "model": "m",
+               "status": "token_cap",
+               "budget": {"tokens_used": 500, "token_cap": 400, "calls": 3,
+                          "wall_seconds": 12.0, "wall_cap": 900, "usage_estimated": True},
+               "stages": [{"calls": [{"usage": {"total_tokens": 100}}, {"usage": {}}]}]}
+        led = BudgetLedger.from_harness_log(log, "run-9")
+        self.assertEqual(led.used_tokens, 500)
+        self.assertTrue(led.usage_estimated)
+        self.assertEqual(led.entries[-1]["kind"], "stop")
+        self.assertEqual(led.entries[-1]["reason"], "token_cap")
+
+    def test_recording_provider_writes_full_transcript(self):
+        with tempfile.TemporaryDirectory() as d:
+            out = pathlib.Path(d)
+            rec = RecordingProvider(scripted(research_packet()), out / "transcript.jsonl")
+            _, log = harness.run_one(TASKS[RES], "single_agent_tool_loop", rec, out, binary=BINARY)
+            self.assertEqual(log["status"], "completed")
+            lines = (out / "transcript.jsonl").read_text().splitlines()
+            self.assertGreaterEqual(len(lines), 1)
+            first = json.loads(lines[0])
+            self.assertIn("request", first)
+            self.assertIn("response", first)
+            self.assertIn("messages", first["request"])
+            self.assertIn("message", first["response"])
+
+    def test_run_all_mock_no_clobber(self):
+        with tempfile.TemporaryDirectory() as d:
+            run_dir, manifest = run_baselines.run_all(
+                scripted(research_packet()), [TASKS[RES]], ["single_agent_tool_loop"],
+                2, d, 200_000, 900, BINARY)
+            self.assertEqual(len(manifest["runs"]), 2)
+            self.assertTrue(all(r["status"] == "completed" for r in manifest["runs"]))
+            reps = sorted(p for p in run_dir.iterdir() if p.is_dir())
+            self.assertEqual(len(reps), 2)
+            self.assertNotEqual(reps[0], reps[1])
+            for rep in reps:
+                self.assertTrue((rep / "transcript.jsonl").exists())
+                self.assertTrue((rep / "budget-ledger.json").exists())
+                self.assertTrue((rep / "scores.json").exists())
+                self.assertTrue(BudgetLedger.read(rep / "budget-ledger.json"))
+            self.assertTrue((run_dir / "manifest.json").exists())
 
 
 if __name__ == "__main__":

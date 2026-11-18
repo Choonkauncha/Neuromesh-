@@ -4,6 +4,7 @@ require "../src/neuromesh/capabilities"
 require "../src/neuromesh/arbitration"
 require "../src/neuromesh/gateway"
 require "../src/neuromesh/scheduler"
+require "../src/neuromesh/budget_ledger"
 
 include NeuroMesh
 

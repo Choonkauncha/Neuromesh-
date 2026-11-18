@@ -4,6 +4,7 @@ require "./neuromesh/capabilities"
 require "./neuromesh/arbitration"
 require "./neuromesh/gateway"
 require "./neuromesh/scheduler"
+require "./neuromesh/budget_ledger"
 
 module NeuroMesh
   # `neuromesh --arbitrate packet.json` prints {"claim_id": "status", ...}.
