@@ -1,0 +1,5 @@
+SOURCE: DriveReviewer.example, "Aurelia X900 review"
+PUBLISHED: 2026-02-10
+
+Aurelia rates the X900 for 600 TBW, which is competitive for the class.
+(Figure taken from the manufacturer's datasheet; we did not test endurance.)

@@ -1,0 +1,129 @@
+{
+  "version": "0.2.0",
+  "note": "v0.1 prompts described tasks but shipped no inputs, so they were not runnable. v0.2 adds frozen inputs under spec/tasks/ and evaluator-only gold under spec/gold/ (never reachable by tools). Rubric weights are unchanged from v0.1. Gold statuses are correct by construction of the inputs, but evaluator calibration of the subjective rubric dimensions is still required before comparative claims.",
+  "tasks": [
+    {
+      "id": "research-conflicting-sources-01",
+      "category": "long_research_conflicting_sources",
+      "input_dir": "spec/tasks/research-conflicting-sources-01/inputs",
+      "gold": "spec/gold/research-conflicting-sources-01.json",
+      "tools": {
+        "allow_tests": false,
+        "allow_write": false
+      },
+      "stages": [
+        {
+          "id": "s1",
+          "visible": null,
+          "prompt": "Source documents about the Quillstream Python library are available through your tools (list_files, read_file, search_text). Investigate exactly two claims. Claim 1: Quillstream 3.2.0 fixes the connection-pool memory leak under default configuration. Claim 2: Quillstream 3.2.0 fixes the leak in every configuration, including idle_timeout=0. For each claim determine what the sources actually establish, identify which sources share an underlying origin, resolve contradictions where possible, and state remaining uncertainty. The number of documents agreeing is not evidence of truth."
+        }
+      ],
+      "required_behaviors": [
+        "source provenance",
+        "independence analysis",
+        "claim-evidence mapping",
+        "explicit uncertainty",
+        "no majority-vote truth"
+      ],
+      "scoring": {
+        "claim_accuracy": 0.3,
+        "source_quality": 0.25,
+        "conflict_handling": 0.2,
+        "provenance": 0.15,
+        "calibration": 0.1
+      }
+    },
+    {
+      "id": "multi_step_debugging-01",
+      "category": "multi_step_debugging",
+      "input_dir": "spec/tasks/multi_step_debugging-01/inputs",
+      "gold": "spec/gold/multi_step_debugging-01",
+      "tools": {
+        "allow_tests": true,
+        "allow_write": true
+      },
+      "stages": [
+        {
+          "id": "s1",
+          "visible": null,
+          "prompt": "A Python repository is under repo/ and a failure log is under logs/. Diagnose the failures and identify every root cause (there may be more than one, and a recently changed file may be a red herring). Make the minimal fix using write_file (do not edit tests), run the tests with run_tests, and report residual risks. Record each root cause as a claim; cite code lines, log lines, and test output (source_file 'tool:run_tests') as evidence."
+        }
+      ],
+      "required_behaviors": [
+        "reproducible diagnosis",
+        "test-backed fix",
+        "tool output evidence",
+        "minimal change",
+        "residual-risk report"
+      ],
+      "scoring": {
+        "root_cause": 0.25,
+        "fix_correctness": 0.3,
+        "test_quality": 0.2,
+        "change_minimality": 0.1,
+        "risk_reporting": 0.15
+      }
+    },
+    {
+      "id": "stateful_research-update-01",
+      "category": "long_horizon_shared_state",
+      "input_dir": "spec/tasks/stateful_research-update-01/inputs",
+      "gold": "spec/gold/stateful_research-update-01.json",
+      "tools": {
+        "allow_tests": false,
+        "allow_write": false
+      },
+      "stages": [
+        {
+          "id": "stage1",
+          "visible": [
+            "stage1_datasheet_v1.txt",
+            "stage1_review_site.txt"
+          ],
+          "prompt": "Stage 1 of 2. Determine the endurance rating (TBW) of the Aurelia X900 1 TB SSD from the available sources and record it as a claim with evidence."
+        },
+        {
+          "id": "stage2",
+          "visible": [
+            "stage1_datasheet_v1.txt",
+            "stage1_review_site.txt",
+            "stage2_datasheet_errata.txt",
+            "stage2_wear_test.txt"
+          ],
+          "prompt": "Stage 2 of 2. New documents are now available. Update the canonical state: keep every earlier claim and evidence record, change statuses where later evidence requires it, add new claims as needed, and use 'supersedes' to link a new claim to the claim it replaces. Explain exactly what changed and why."
+        }
+      ],
+      "required_behaviors": [
+        "state continuity",
+        "versioned updates",
+        "revision provenance",
+        "superseded-claim tracking",
+        "conflict preservation"
+      ],
+      "scoring": {
+        "final_accuracy": 0.3,
+        "state_consistency": 0.25,
+        "revision_traceability": 0.2,
+        "evidence_quality": 0.15,
+        "uncertainty": 0.1
+      }
+    }
+  ],
+  "comparison_conditions": [
+    "single_agent_tool_loop",
+    "sequential_planner_explorer_verifier",
+    "neuromesh_concurrent_mesh"
+  ],
+  "fairness_controls": [
+    "same model family where applicable",
+    "same tool access",
+    "equal total token budget",
+    "same wall-clock cap",
+    "same frozen task inputs",
+    "same scoring rubric",
+    "record all retries and failures",
+    "identical toolbox implementation for all conditions (Verifier gets the read-only subset)",
+    "one structured-output repair attempt per structured stage in every condition, recorded",
+    "token and wall-clock caps enforced by the harness and recorded"
+  ]
+}

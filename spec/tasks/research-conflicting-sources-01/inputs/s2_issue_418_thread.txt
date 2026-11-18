@@ -1,0 +1,15 @@
+SOURCE: github.example/quillstream/quillstream/issues/418 (public issue thread, excerpted in full)
+
+[2026-01-14] reporter "mkaplan": RSS grows without bound with the default pool
+settings on 3.1.4. Roughly 38 MB/hour under steady load.
+
+[2026-03-02] maintainer "ahobbs": Fixed in 3.2.0 via PR #455 (pool teardown
+rework). Closing.
+
+[2026-03-09] reporter "mkaplan": Re-testing on 3.2.0. With default settings the
+leak is gone for me. BUT with idle_timeout=0 (we use this to keep warm
+connections) RSS still grows ~35 MB/hour. Repro script attached
+(repro_idle0.py, 40 lines). Please reopen.
+
+[2026-03-10] maintainer "ahobbs": Confirmed idle_timeout=0 skips teardown.
+Reopening as #461 for 3.2.1.

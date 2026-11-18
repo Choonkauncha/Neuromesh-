@@ -1,0 +1,6 @@
+2026-11-02T08:14:03Z ledger-nightly INFO  building report batch=7731 lines=2
+2026-11-02T08:14:03Z ledger-nightly ERROR reconciliation mismatch: expected total 20.28 got 20.27 (diff 0.01)
+2026-11-02T08:14:03Z ledger-nightly INFO  building report batch=7732 lines=1
+2026-11-02T08:14:03Z ledger-nightly ERROR finance review flagged refund line: shows "-4.90" for source amount -3.10
+2026-11-02T08:14:04Z ledger-nightly WARN  tax module changed in commit 9e1f (refactor to integer math); suspected cause?
+2026-11-02T08:14:04Z ledger-nightly INFO  tax tests pass on main

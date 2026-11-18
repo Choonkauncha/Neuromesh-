@@ -1,0 +1,2 @@
+{"note": "Evaluator-only. Root causes: (1) ledger/money.py parse_amount uses float truncation; (2) ledger/report.py format_cents uses floor division on negatives. ledger/tax.py is a distractor and is correct. Reference fix touches 2 files, ~6 changed lines.",
+ "reference_changed_lines": 6, "distractor_file": "ledger/tax.py"}

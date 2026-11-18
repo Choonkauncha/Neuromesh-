@@ -1,0 +1,14 @@
+SOURCE: Harbor Labs technical report HL-2026-07, "Memory behaviour of Quillstream 3.1.4 vs 3.2.0"
+PUBLISHED: 2026-03-20
+METHOD: 24-hour soak test, 200 req/s synthetic load, 3 runs per configuration,
+raw run logs published in the report appendix (harbor-labs.example/hl-2026-07).
+
+Results (mean RSS growth per hour)
+  3.1.4, default settings:          38.1 MB/h
+  3.2.0, default settings:           0.4 MB/h
+  3.2.0, idle_timeout=0:            36.2 MB/h
+  3.1.4, idle_timeout=0:            37.9 MB/h
+
+Conclusion: the PR #455 teardown rework eliminates the growth under default
+settings. It has no effect when idle_timeout=0. Testing was on Linux x86_64,
+Python 3.12 only.

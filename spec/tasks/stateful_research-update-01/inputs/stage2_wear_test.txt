@@ -1,0 +1,9 @@
+SOURCE: StorageLab.example independent wear-out test of the X900 1 TB
+PUBLISHED: 2026-05-02
+METHOD: sequential-write wear test to SMART critical-warning threshold, 2 units,
+own logs published.
+
+Both 1 TB units reached the SMART wear threshold at 312 TB and 318 TB written.
+The vendor's corrected rating for this model (300 TBW, per errata AE-2026-03)
+is consistent with these results. The earlier 600 TBW figure was not reached by
+either unit.

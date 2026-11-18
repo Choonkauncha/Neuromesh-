@@ -1,0 +1,6 @@
+SOURCE: "Backend Weekly" newsletter, issue 212
+PUBLISHED: 2026-03-06
+
+Quick hits: DevNotes reports that Quillstream 3.2 fixes the pool leak, so if
+you've been rebooting your workers nightly you can probably stop. (Source:
+DevNotes.) No independent verification.

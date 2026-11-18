@@ -1,0 +1,6 @@
+SOURCE: discuss.example forum thread "Quillstream 3.2 memory?"
+PUBLISHED: 2026-03-12
+USER: "turbo_fox_88"
+
+yeah 3.2 totally fixed it for me. no more leaks. dont know what ur all
+complaining about

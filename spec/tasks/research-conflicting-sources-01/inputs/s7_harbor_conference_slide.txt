@@ -1,0 +1,7 @@
+SOURCE: Slide 14 of Harbor Labs talk "Soak testing in practice", PyOps Conf 2026
+PUBLISHED: 2026-04-10
+SPEAKER: Harbor Labs engineering
+
+Case study: Quillstream pool leak.
+  3.1.4: 38 MB/h   ->   3.2.0: 0.4 MB/h   (data: HL-2026-07, default settings)
+Takeaway: soak tests catch what unit tests don't.

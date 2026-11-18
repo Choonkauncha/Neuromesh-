@@ -1,0 +1,8 @@
+SOURCE: DevNotes blog, "Quillstream 3.2 is out" (devnotes.example/posts/quillstream-3-2)
+PUBLISHED: 2026-03-03
+AUTHOR: staff writer
+
+Good news for anyone fighting memory growth: Quillstream 3.2 fixes the
+connection-pool leak. According to the official release notes, 3.2.0
+"addresses the memory leaks reported in issue #418 under typical workloads".
+Upgrade today. We did not run our own tests for this post.

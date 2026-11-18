@@ -1,0 +1,9 @@
+{
+  "note": "Evaluator-only.",
+  "stage1_match": "600",
+  "stage1_status": "supported",
+  "stage2_retained_status": "rejected",
+  "stage2_new_match": "300",
+  "stage2_new_status": "supported",
+  "insight": "Stage 2 officially withdraws the stage-1 source. The 600 TBW claim must be RETAINED (same claim_id) as rejected, not silently deleted, and a new 300 TBW claim recorded that lists the old claim_id in 'supersedes'."
+}

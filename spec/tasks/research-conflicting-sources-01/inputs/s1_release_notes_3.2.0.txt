@@ -1,0 +1,13 @@
+SOURCE: Quillstream project, official release notes (docs.quillstream.example/releases/3.2.0)
+PUBLISHED: 2026-03-02
+
+Quillstream 3.2.0
+
+Highlights
+- Reworked connection-pool teardown (PR #455). This addresses the memory leaks
+  reported in issue #418 under typical workloads.
+- New metrics endpoint for pool occupancy.
+
+Known issues
+- Pool teardown is not triggered when idle_timeout is set to 0 (idle connections
+  are never reaped in that configuration). We are tracking this for 3.2.1.

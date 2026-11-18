@@ -1,0 +1,7 @@
+SOURCE: Aurelia Storage, X900 NVMe SSD datasheet, revision 1.0
+PUBLISHED: 2026-02-01
+
+X900 series (1 TB, 2 TB)
+Endurance rating: 600 TBW
+Interface: PCIe 4.0 x4
+Warranty: 5 years or rated TBW, whichever comes first

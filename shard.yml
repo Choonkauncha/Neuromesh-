@@ -1,0 +1,9 @@
+name: neuromesh
+version: 0.2.0
+authors:
+  - NEUROMESH contributors
+license: MIT
+crystal: '>= 1.12.0'
+targets:
+  neuromesh:
+    main: src/neuromesh.cr

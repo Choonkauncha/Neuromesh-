@@ -1,0 +1,8 @@
+SOURCE: Aurelia Storage, X900 datasheet revision 1.1 and errata notice AE-2026-03
+PUBLISHED: 2026-04-15
+
+ERRATA: Revision 1.0 listed a single endurance figure for the whole X900 series
+in error.
+  X900 1 TB: 300 TBW
+  X900 2 TB: 600 TBW
+Revision 1.0 is withdrawn. Warranty terms follow the per-model TBW above.

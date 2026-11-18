@@ -1,0 +1,44 @@
+{
+  "note": "Evaluator-only. Never exposed to model tools. Ground truth is true by construction of the packet.",
+  "claims_expected": [
+    {
+      "match": "default",
+      "status": "supported",
+      "meaning": "3.2.0 fixes the leak under default configuration (s1 B + s5 A, original origins)",
+      "not_match": "idle_timeout|all configuration|every configuration|including"
+    },
+    {
+      "match": "idle_timeout|all configuration|every configuration|including",
+      "status": "rejected",
+      "meaning": "3.2.0 fixes the leak in ALL configurations incl. idle_timeout=0 is contradicted by s1, s2, s5"
+    }
+  ],
+  "origin_groups": [
+    {
+      "origin": "release_notes",
+      "files": [
+        "s1_release_notes_3.2.0.txt",
+        "s3_devnotes_blog.txt",
+        "s4_weekly_newsletter.txt"
+      ],
+      "must_not_be_independent": [
+        "s3_devnotes_blog.txt",
+        "s4_weekly_newsletter.txt"
+      ]
+    },
+    {
+      "origin": "harbor_dataset",
+      "files": [
+        "s5_harbor_labs_benchmark.txt",
+        "s7_harbor_conference_slide.txt"
+      ],
+      "must_not_be_independent": [
+        "s7_harbor_conference_slide.txt"
+      ]
+    }
+  ],
+  "required_grade": {
+    "s6_forum_post.txt": "d"
+  },
+  "insight": "Seven documents, but only four origins (release notes, issue thread, Harbor dataset, forum). Counting agreeing documents (6 of 7 say 'fixed') gives the wrong answer for the all-configurations claim."
+}
